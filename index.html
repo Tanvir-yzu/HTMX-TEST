@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Dynamic Function Page - HTMX & Tailwind</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- HTMX CDN -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <!-- Chart.js for interactive charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Sortable.js for drag and drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <style>
+        /* Custom animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Toast notifications */
+        .toast {
+            animation: slideInRight 0.3s ease-out;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Progress bar animation */
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+        
+        /* Drag and drop styles */
+        .sortable-ghost {
+            opacity: 0.4;
+        }
+        .sortable-chosen {
+            transform: scale(1.02);
+        }
+        
+        /* Loading spinner */
+        .spinner {
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #3498db;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-gray-800">Enhanced Dynamic Functions</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showNotification('Welcome to Enhanced Dashboard!', 'success')" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Dashboard
+                    </button>
+                    <button onclick="showNotification('Feature coming soon!', 'info')" 
+                            class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors">
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">Enhanced Interactive Function Demo</h2>
+            <p class="text-lg text-gray-600">Experience advanced dynamic features with real-time updates, data visualization, and interactive components</p>
+        </div>
+
+        <!-- Enhanced Function Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Dynamic Content Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="flex items-center mb-4">
+                    <div class="bg-blue-100 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 ml-3">Dynamic Content</h3>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">Load content dynamically with animations</p>
+                <button 
+                    hx-get="#dynamic-content" 
+                    hx-target="#content-area"
+                    hx-swap="innerHTML"
+                    hx-indicator="#loading-content"
+                    class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    Load Content
+                </button>
+            </div>
+
+            <!-- Data Table Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="flex items-center mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2h2a2 2 0 002-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 ml-3">Data Table</h3>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">Interactive table with sorting & filtering</p>
+                <button 
+                    hx-get="#load-table" 
+                    hx-target="#table-area"
+                    hx-swap="innerHTML"
+                    class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    Load Table
+                </button>
+            </div>
+
+            <!-- Charts Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="flex items-center mb-4">
+                    <div class="bg-purple-100 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 ml-3">Live Charts</h3>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">Real-time data visualization</p>
+                <button 
+                    onclick="loadChart()"
+                    class="w-full bg-purple-500 hover:bg-purple-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    Show Charts
+                </button>
+            </div>
+
+            <!-- Task Manager Card -->
+            <div class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="flex items-center mb-4">
+                    <div class="bg-orange-100 p-3 rounded-lg">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-800 ml-3">Task Manager</h3>
+                </div>
+                <p class="text-gray-600 mb-4 text-sm">Drag & drop task management</p>
+                <button 
+                    hx-get="#load-tasks" 
+                    hx-target="#task-area"
+                    hx-swap="innerHTML"
+                    class="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 rounded-lg transition-colors">
+                    Load Tasks
+                </button>
+            </div>
+        </div>
+
+        <!-- Dynamic Tabs Section -->
+        <div class="bg-white rounded-xl shadow-lg mb-8">
+            <div class="border-b border-gray-200">
+                <nav class="flex space-x-8 px-6" aria-label="Tabs">
+                    <button onclick="switchTab('overview')" id="tab-overview" class="tab-button active border-b-2 border-blue-500 py-4 px-1 text-sm font-medium text-blue-600">
+                        Overview
+                    </button>
+                    <button onclick="switchTab('analytics')" id="tab-analytics" class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Analytics
+                    </button>
+                    <button onclick="switchTab('reports')" id="tab-reports" class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Reports
+                    </button>
+                    <button onclick="switchTab('settings')" id="tab-settings" class="tab-button border-b-2 border-transparent py-4 px-1 text-sm font-medium text-gray-500 hover:text-gray-700">
+                        Settings
+                    </button>
+                </nav>
+            </div>
+            <div id="tab-content" class="p-6">
+                <!-- Tab content will be loaded here -->
+                <div id="overview-content">
+                    <h3 class="text-xl font-bold text-gray-800 mb-4">System Overview</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-blue-800">Active Sessions</h4>
+                            <p class="text-2xl font-bold text-blue-600" id="active-sessions">Loading...</p>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-green-800">Success Rate</h4>
+                            <p class="text-2xl font-bold text-green-600" id="success-rate">Loading...</p>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg">
+                            <h4 class="font-semibold text-purple-800">Response Time</h4>
+                            <p class="text-2xl font-bold text-purple-600" id="response-time">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enhanced Content Areas -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Dynamic Content Area with Loading -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-2xl font-bold text-gray-800">Dynamic Content Area</h3>
+                    <div id="loading-content" class="htmx-indicator">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <div id="content-area" class="min-h-32 flex items-center justify-center text-gray-500">
+                    <p>Click "Load Content" above to see dynamic content appear here</p>
+                </div>
+            </div>
+
+            <!-- Live Search with Enhanced Results -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Enhanced Live Search</h3>
+                <div class="mb-4">
+                    <input 
+                        type="text" 
+                        placeholder="Type to search with filters..."
+                        hx-post="#search"
+                        hx-target="#search-results"
+                        hx-trigger="keyup changed delay:300ms"
+                        hx-indicator="#search-loading"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                    <div id="search-loading" class="htmx-indicator mt-2">
+                        <div class="flex items-center text-gray-500">
+                            <div class="spinner mr-2"></div>
+                            Searching...
+                        </div>
+                    </div>
+                </div>
+                <div id="search-results" class="min-h-32">
+                    <p class="text-gray-500">Start typing to see enhanced search results with categories</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Table Area -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Interactive Data Table</h3>
+            <div id="table-area">
+                <p class="text-gray-500 text-center py-8">Click "Load Table" above to see the interactive data table</p>
+            </div>
+        </div>
+
+        <!-- Charts Area -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Real-time Analytics</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                    <canvas id="lineChart" width="400" height="200"></canvas>
+                </div>
+                <div>
+                    <canvas id="doughnutChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Management Area -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Drag & Drop Task Manager</h3>
+            <div id="task-area">
+                <p class="text-gray-500 text-center py-8">Click "Load Tasks" above to see the drag & drop task manager</p>
+            </div>
+        </div>
+
+        <!-- Progress Tracking Section -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Real-time Progress Tracking</h3>
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Data Processing</span>
+                        <span class="text-sm text-gray-500" id="progress-1-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-blue-600 h-2 rounded-full progress-bar" id="progress-1" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">File Upload</span>
+                        <span class="text-sm text-gray-500" id="progress-2-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-green-600 h-2 rounded-full progress-bar" id="progress-2" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium text-gray-700">Analysis Complete</span>
+                        <span class="text-sm text-gray-500" id="progress-3-text">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-purple-600 h-2 rounded-full progress-bar" id="progress-3" style="width: 0%"></div>
+                    </div>
+                </div>
+                <button onclick="startProgress()" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+                    Start Progress Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- Enhanced Statistics Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+                <div class="text-3xl font-bold text-blue-600" hx-get="#stat1" hx-trigger="load" hx-swap="innerHTML">0</div>
+                <p class="text-gray-600">Active Users</p>
+                <div class="mt-2 text-xs text-green-500">↗ +12% from last week</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+                <div class="text-3xl font-bold text-green-600" hx-get="#stat2" hx-trigger="load" hx-swap="innerHTML">0</div>
+                <p class="text-gray-600">Completed Tasks</p>
+                <div class="mt-2 text-xs text-green-500">↗ +8% from last week</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+                <div class="text-3xl font-bold text-purple-600" hx-get="#stat3" hx-trigger="load" hx-swap="innerHTML">0</div>
+                <p class="text-gray-600">API Calls</p>
+                <div class="mt-2 text-xs text-blue-500">↗ +25% from last week</div>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center hover:shadow-xl transition-shadow">
+                <div class="text-3xl font-bold text-red-600" hx-get="#stat4" hx-trigger="load" hx-swap="innerHTML">0</div>
+                <p class="text-gray-600">Error Rate</p>
+                <div class="mt-2 text-xs text-red-500">↘ -15% from last week</div>
+            </div>
+        </div>
+
+        <!-- Infinite Scroll Demo -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+            <h3 class="text-2xl font-bold text-gray-800 mb-4">Infinite Scroll Demo</h3>
+            <div id="infinite-scroll-container" class="max-h-96 overflow-y-auto">
+                <div id="scroll-content">
+                    <!-- Initial content will be loaded here -->
+                </div>
+                <div id="scroll-trigger" 
+                     hx-get="#load-more" 
+                     hx-target="#scroll-content" 
+                     hx-swap="beforeend"
+                     hx-trigger="intersect once"
+                     class="text-center py-4">
+                    <div class="spinner mx-auto"></div>
+                    <p class="text-gray-500 mt-2">Loading more content...</p>
+                </div>
+            </div>
+            <button onclick="initInfiniteScroll()" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors">
+                Start Infinite Scroll
+            </button>
+        </div>
+    </div>
+
+    <!-- Enhanced Modal for Form -->
+    <div id="form-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4 transform transition-all">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-gray-800">Enhanced Contact Form</h3>
+                <button onclick="document.getElementById('form-modal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <form hx-post="#submit-form" hx-target="#form-response" hx-swap="innerHTML" hx-indicator="#form-loading">
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                    <input type="text" name="name" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+                    <input type="email" name="email" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Priority</label>
+                    <select name="priority" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 text-sm font-bold mb-2">Message</label>
+                    <textarea name="message" rows="4" required class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
+                    <span id="form-loading" class="htmx-indicator mr-2">
+                        <div class="spinner"></div>
+                    </span>
+                    Send Message
+                </button>
+            </form>
+            <div id="form-response" class="mt-4"></div>
+        </div>
+    </div>
+
+    <!-- Hidden templates for HTMX responses -->
+    <template id="dynamic-content">
+        <div class="fade-in">
+            <h4 class="text-xl font-semibold text-gray-800 mb-3">🎉 Enhanced Dynamic Content Loaded!</h4>
+            <p class="text-gray-600 mb-4">This enhanced content includes advanced features:</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <h5 class="font-semibold text-blue-800">Real-time Updates</h5>
+                    <p class="text-blue-600 text-sm">Live data synchronization</p>
+                </div>
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <h5 class="font-semibold text-green-800">Interactive Elements</h5>
+                    <p class="text-green-600 text-sm">Click, drag, and interact</p>
+                </div>
+                <div class="bg-purple-50 p-3 rounded-lg">
+                    <h5 class="font-semibold text-purple-800">Data Visualization</h5>
+                    <p class="text-purple-600 text-sm">Charts and graphs</p>
+                </div>
+                <div class="bg-orange-50 p-3 rounded-lg">
+                    <h5 class="font-semibold text-orange-800">Responsive Design</h5>
+                    <p class="text-orange-600 text-sm">Mobile-first approach</p>
+                </div>
+            </div>
+            <div class="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg">
+                <p class="text-gray-800 font-medium">Current time: <span id="current-time" class="text-blue-600"></span></p>
+                <p class="text-gray-600 text-sm mt-1">Last updated: <span id="last-updated" class="text-purple-600"></span></p>
+            </div>
+            <div class="mt-4 flex space-x-2">
+                <button onclick="showNotification('Content refreshed!', 'success')" class="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                    Refresh
+                </button>
+                <button onclick="showNotification('Content shared!', 'info')" class="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">
+                    Share
+                </button>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        // Enhanced JavaScript functionality
+        let lineChart, doughnutChart;
+        let progressIntervals = [];
+
+        // Toast notification system
+        function showNotification(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+            
+            toast.className = `toast ${colors[type]} text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" class="ml-2 text-white hover:text-gray-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.remove();
+                }
+            }, 5000);
+        }
+
+        // Enhanced tab switching
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active', 'border-blue-500', 'text-blue-600');
+                btn.classList.add('border-transparent', 'text-gray-500');
+            });
+            
+            const activeTab = document.getElementById(`tab-${tabName}`);
+            activeTab.classList.add('active', 'border-blue-500', 'text-blue-600');
+            activeTab.classList.remove('border-transparent', 'text-gray-500');
+            
+            // Load tab content
+            const content = document.getElementById('tab-content');
+            content.innerHTML = '<div class="text-center py-8"><div class="spinner mx-auto"></div><p class="text-gray-500 mt-2">Loading...</p></div>';
+            
+            setTimeout(() => {
+                const tabContents = {
+                    overview: `
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">System Overview</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-blue-800">Active Sessions</h4>
+                                <p class="text-2xl font-bold text-blue-600">1,234</p>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-green-800">Success Rate</h4>
+                                <p class="text-2xl font-bold text-green-600">98.5%</p>
+                            </div>
+                            <div class="bg-purple-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-purple-800">Response Time</h4>
+                                <p class="text-2xl font-bold text-purple-600">45ms</p>
+                            </div>
+                        </div>
+                    `,
+                    analytics: `
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Analytics Dashboard</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-gray-800 mb-2">User Engagement</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between"><span>Page Views</span><span class="font-bold">15,432</span></div>
+                                    <div class="flex justify-between"><span>Unique Visitors</span><span class="font-bold">8,921</span></div>
+                                    <div class="flex justify-between"><span>Bounce Rate</span><span class="font-bold">23.4%</span></div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold text-gray-800 mb-2">Performance Metrics</h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between"><span>Load Time</span><span class="font-bold">1.2s</span></div>
+                                    <div class="flex justify-between"><span>Uptime</span><span class="font-bold">99.9%</span></div>
+                                    <div class="flex justify-between"><span>Error Rate</span><span class="font-bold">0.1%</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `,
+                    reports: `
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">Reports & Insights</h3>
+                        <div class="space-y-4">
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800">Weekly Report</h4>
+                                <p class="text-gray-600 text-sm">Generated on ${new Date().toLocaleDateString()}</p>
+                                <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded text-sm hover:bg-blue-600">Download PDF</button>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-4">
+                                <h4 class="font-semibold text-gray-800">Monthly Analytics</h4>
+                                <p class="text-gray-600 text-sm">Comprehensive monthly overview</p>
+                                <button class="mt-2 bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600">View Report</button>
+                            </div>
+                        </div>
+                    `,
+                    settings: `
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">System Settings</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Real-time Updates</h4>
+                                    <p class="text-gray-600 text-sm">Enable live data synchronization</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Notifications</h4>
+                                    <p class="text-gray-600 text-sm">Show toast notifications</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    `
+                };
+                
+                content.innerHTML = tabContents[tabName];
+            }, 500);
+        }
+
+        // Load interactive charts
+        function loadChart() {
+            showNotification('Loading charts...', 'info');
+            
+            setTimeout(() => {
+                // Line Chart
+                const lineCtx = document.getElementById('lineChart').getContext('2d');
+                if (lineChart) lineChart.destroy();
+                
+                lineChart = new Chart(lineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Users',
+                            data: [12, 19, 3, 5, 2, 3],
+                            borderColor: 'rgb(59, 130, 246)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'User Growth'
+                            }
+                        }
+                    }
+                });
+
+                // Doughnut Chart
+                const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+                if (doughnutChart) doughnutChart.destroy();
+                
+                doughnutChart = new Chart(doughnutCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Desktop', 'Mobile', 'Tablet'],
+                        datasets: [{
+                            data: [55, 35, 10],
+                            backgroundColor: [
+                                'rgb(59, 130, 246)',
+                                'rgb(16, 185, 129)',
+                                'rgb(139, 92, 246)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Device Usage'
+                            }
+                        }
+                    }
+                });
+
+                showNotification('Charts loaded successfully!', 'success');
+                
+                // Update charts with real-time data
+                setInterval(() => {
+                    if (lineChart) {
+                        lineChart.data.datasets[0].data = lineChart.data.datasets[0].data.map(() => 
+                            Math.floor(Math.random() * 20) + 1
+                        );
+                        lineChart.update();
+                    }
+                }, 5000);
+            }, 1000);
+        }
+
+        // Progress bar animation
+        function startProgress() {
+            const progressBars = ['progress-1', 'progress-2', 'progress-3'];
+            const progressTexts = ['progress-1-text', 'progress-2-text', 'progress-3-text'];
+            
+            // Clear existing intervals
+            progressIntervals.forEach(interval => clearInterval(interval));
+            progressIntervals = [];
+            
+            progressBars.forEach((barId, index) => {
+                const bar = document.getElementById(barId);
+                const text = document.getElementById(progressTexts[index]);
+                let progress = 0;
+                
+                const interval = setInterval(() => {
+                    progress += Math.random() * 10;
+                    if (progress >= 100) {
+                        progress = 100;
+                        clearInterval(interval);
+                        showNotification(`Task ${index + 1} completed!`, 'success');
+                    }
+                    
+                    bar.style.width = progress + '%';
+                    text.textContent = Math.round(progress) + '%';
+                }, 200 + (index * 100));
+                
+                progressIntervals.push(interval);
+            });
+        }
+
+        // Initialize infinite scroll
+        function initInfiniteScroll() {
+            const container = document.getElementById('scroll-content');
+            container.innerHTML = '';
+            
+            // Load initial content
+            for (let i = 1; i <= 10; i++) {
+                const item = document.createElement('div');
+                item.className = 'p-4 border-b border-gray-200 hover:bg-gray-50';
+                item.innerHTML = `
+                    <h4 class="font-semibold text-gray-800">Item ${i}</h4>
+                    <p class="text-gray-600 text-sm">This is content item number ${i} with some description text.</p>
+                `;
+                container.appendChild(item);
+            }
+            
+            showNotification('Infinite scroll initialized!', 'success');
+        }
+
+        // Simulate HTMX responses for demo purposes
+        document.body.addEventListener('htmx:configRequest', function(evt) {
+            const target = evt.detail.target;
+            
+            // Handle dynamic content loading
+            if (evt.detail.path === '#dynamic-content') {
+                evt.preventDefault();
+                setTimeout(() => {
+                    const template = document.getElementById('dynamic-content');
+                    const content = template.content.cloneNode(true);
+                    document.getElementById('content-area').innerHTML = '';
+                    document.getElementById('content-area').appendChild(content);
+                    
+                    // Update current time
+                    const timeElement = document.getElementById('current-time');
+                    const lastUpdated = document.getElementById('last-updated');
+                    if (timeElement) {
+                        timeElement.textContent = new Date().toLocaleTimeString();
+                    }
+                    if (lastUpdated) {
+                        lastUpdated.textContent = new Date().toLocaleString();
+                    }
+                    
+                    showNotification('Dynamic content loaded!', 'success');
+                }, 800);
+            }
+            
+            // Handle enhanced search
+            if (evt.detail.path === '#search') {
+                evt.preventDefault();
+                const query = evt.detail.parameters.search || evt.target.value;
+                setTimeout(() => {
+                    const results = document.getElementById('search-results');
+                    if (query.trim()) {
+                        results.innerHTML = `
+                            <div class="fade-in">
+                                <h4 class="font-semibold text-gray-800 mb-3">Search Results for "${query}":</h4>
+                                <div class="space-y-3">
+                                    <div class="p-4 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                                        <h5 class="font-semibold text-blue-800">Documentation</h5>
+                                        <p class="text-blue-600 text-sm">${query} API documentation and guides</p>
+                                    </div>
+                                    <div class="p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                                        <h5 class="font-semibold text-green-800">Examples</h5>
+                                        <p class="text-green-600 text-sm">Code examples and tutorials for ${query}</p>
+                                    </div>
+                                    <div class="p-4 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                                        <h5 class="font-semibold text-purple-800">Community</h5>
+                                        <p class="text-purple-600 text-sm">Community discussions about ${query}</p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-sm text-gray-500">
+                                    Found 3 results in 0.${Math.floor(Math.random() * 900) + 100}s
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        results.innerHTML = '<p class="text-gray-500">Start typing to see enhanced search results with categories</p>';
+                    }
+                }, 400);
+            }
+            
+            // Handle data table loading
+            if (evt.detail.path === '#load-table') {
+                evt.preventDefault();
+                setTimeout(() => {
+                    const tableArea = document.getElementById('table-area');
+                    tableArea.innerHTML = `
+                        <div class="fade-in">
+                            <div class="mb-4 flex flex-col sm:flex-row gap-4">
+                                <input type="text" placeholder="Filter table..." class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <select class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option>Sort by Name</option>
+                                    <option>Sort by Date</option>
+                                    <option>Sort by Status</option>
+                                </select>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white border border-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">Name</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">Email</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-gray-200">
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">John Doe</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">john@example.com</td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-01-15</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
+                                                <button class="text-red-600 hover:text-red-900">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Jane Smith</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">jane@example.com</td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-01-14</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
+                                                <button class="text-red-600 hover:text-red-900">Delete</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Bob Johnson</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">bob@example.com</td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactive</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-01-13</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <button class="text-blue-600 hover:text-blue-900 mr-2">Edit</button>
+                                                <button class="text-red-600 hover:text-red-900">Delete</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between">
+                                <div class="text-sm text-gray-700">
+                                    Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">12</span> results
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Previous</button>
+                                    <button class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600">1</button>
+                                    <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300">2</button>
+                                    <button class="px-3 py-1 text-sm bg-gray-200 text-gray-700 rounded hover:bg-gray-300">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    showNotification('Data table loaded!', 'success');
+                }, 600);
+            }
+            
+            // Handle task loading
+            if (evt.detail.path === '#load-tasks') {
+                evt.preventDefault();
+                setTimeout(() => {
+                    const taskArea = document.getElementById('task-area');
+                    taskArea.innerHTML = `
+                        <div class="fade-in">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                                        <span class="w-3 h-3 bg-red-500 rounded-full mr-2"></span>
+                                        To Do
+                                    </h4>
+                                    <div id="todo-list" class="space-y-2">
+                                        <div class="bg-white p-3 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow">
+                                            <h5 class="font-medium text-gray-800">Design Homepage</h5>
+                                            <p class="text-gray-600 text-sm">Create wireframes and mockups</p>
+                                        </div>
+                                        <div class="bg-white p-3 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow">
+                                            <h5 class="font-medium text-gray-800">API Integration</h5>
+                                            <p class="text-gray-600 text-sm">Connect frontend with backend</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                                        <span class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></span>
+                                        In Progress
+                                    </h4>
+                                    <div id="progress-list" class="space-y-2">
+                                        <div class="bg-white p-3 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow">
+                                            <h5 class="font-medium text-gray-800">User Authentication</h5>
+                                            <p class="text-gray-600 text-sm">Implementing login system</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-4">
+                                    <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+                                        <span class="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
+                                        Done
+                                    </h4>
+                                    <div id="done-list" class="space-y-2">
+                                        <div class="bg-white p-3 rounded-lg shadow-sm cursor-move hover:shadow-md transition-shadow">
+                                            <h5 class="font-medium text-gray-800">Project Setup</h5>
+                                            <p class="text-gray-600 text-sm">Initial project configuration</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Initialize drag and drop
+                    ['todo-list', 'progress-list', 'done-list'].forEach(listId => {
+                        new Sortable(document.getElementById(listId), {
+                            group: 'tasks',
+                            animation: 150,
+                            ghostClass: 'sortable-ghost',
+                            chosenClass: 'sortable-chosen',
+                            onEnd: function(evt) {
+                                showNotification('Task moved successfully!', 'success');
+                            }
+                        });
+                    });
+                    
+                    showNotification('Task manager loaded!', 'success');
+                }, 700);
+            }
+            
+            // Handle infinite scroll
+            if (evt.detail.path === '#load-more') {
+                evt.preventDefault();
+                setTimeout(() => {
+                    const container = document.getElementById('scroll-content');
+                    const currentItems = container.children.length;
+                    
+                    for (let i = 1; i <= 5; i++) {
+                        const item = document.createElement('div');
+                        item.className = 'p-4 border-b border-gray-200 hover:bg-gray-50 fade-in';
+                        item.innerHTML = `
+                            <h4 class="font-semibold text-gray-800">Item ${currentItems + i}</h4>
+                            <p class="text-gray-600 text-sm">This is dynamically loaded content item number ${currentItems + i}.</p>
+                        `;
+                        container.appendChild(item);
+                    }
+                    
+                    // Re-trigger infinite scroll if there are more items to load
+                    if (currentItems < 50) {
+                        document.getElementById('scroll-trigger').setAttribute('hx-trigger', 'intersect once');
+                    } else {
+                        document.getElementById('scroll-trigger').innerHTML = '<p class="text-gray-500 text-center py-4">No more items to load</p>';
+                    }
+                }, 800);
+            }
+            
+            // Handle form submission
+            if (evt.detail.path === '#submit-form') {
+                evt.preventDefault();
+                setTimeout(() => {
+                    document.getElementById('form-response').innerHTML = `
+                        <div class="p-4 bg-green-50 border border-green-200 rounded-lg">
+                            <p class="text-green-800 font-medium">✅ Message sent successfully!</p>
+                            <p class="text-green-600 text-sm mt-1">Thank you for your message. We'll get back to you within 24 hours.</p>
+                        </div>
+                    `;
+                    showNotification('Form submitted successfully!', 'success');
+                }, 1200);
+            }
+            
+            // Handle statistics
+            if (evt.detail.path.startsWith('#stat')) {
+                evt.preventDefault();
+                const statNum = evt.detail.path.replace('#stat', '');
+                const values = ['1,234', '856', '12,456', '0.2%'];
+                setTimeout(() => {
+                    evt.detail.target.textContent = values[parseInt(statNum) - 1];
+                }, Math.random() * 1000 + 500);
+            }
+        });
+
+        // Enhanced interactive features on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.hover\\:shadow-xl');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-2px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+            
+            // Initialize overview tab content
+            switchTab('overview');
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to the Enhanced Dynamic Function Page!', 'success');
+            }, 1000);
+            
+            // Auto-update statistics
+            setInterval(() => {
+                const stats = document.querySelectorAll('[hx-get^="#stat"]');
+                stats.forEach(stat => {
+                    if (stat.textContent !== '0') {
+                        const currentValue = parseInt(stat.textContent.replace(/,/g, ''));
+                        const newValue = currentValue + Math.floor(Math.random() * 10) - 5;
+                        stat.textContent = newValue.toLocaleString();
+                    }
+                });
+            }, 10000);
+        });
+    </script>
+</body>
+</html>
